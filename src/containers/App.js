@@ -1,51 +1,52 @@
 import React, { Component } from 'react';
 import classes from './App.css';
-import Persons from '../components/Persons/Persons.js'
-import Cockpit from '../Cockpit/Cockpit';
+import Persons from '../components/persons/Persons.js'
+import Cockpit from '../cockpit/Cockpit';
 
 class App extends Component {
-  state = {
-    persons: [
-    {id: '1', name: 'Wayne', age: '28'},
-    {id: '2', name: 'Daniel', age: '29'},
-    {id: '3', name: 'Daryl', age: '26'}
-    ],
-    showPersons: false
+  constructor(props){
+    super(props)
+    console.log('[App.js] constructor')
+    this.state = {
+      persons: [
+      {id: '1', name: 'Wayne', age: '28'},
+      {id: '2', name: 'Daniel', age: '29'},
+      {id: '3', name: 'Daryl', age: '26'}
+      ],
+      showPersons: false
+    }
+  }
+
+  static getDerivedStateFromProps(props, state){
+    console.log('[App.js] getDerivedStateFromProps')
+    return state
+  }
+
+  componentWillMount(){
+    console.log('[App.js] componentWillMount')
+  }
+
+  componentDidMount(){
+    console.log('[App.js] componentDidMount')
   }
 
   deletePersonHandler = (personIndex) => {
-    // Copy persons object
-    // const persons = this.state.persons.slice();
-    const persons = [...this.state.persons]
-
-    // Remove person at index in copy
-    persons.splice(personIndex, 1);
-
-    // Set state to new copy of persons
-    this.setState({persons: persons});
+    // const persons = this.state.persons.slice();  // Copy persons object
+    const persons = [...this.state.persons] // Copy persons object
+    persons.splice(personIndex, 1); // Remove person at index in copy
+    this.setState({persons: persons}); // Set state to new copy of persons
   }
 
   nameChangedHandler = (event, id) => {
-    // Find person who matches ID
     const personIndex = this.state.persons.findIndex(p => {
-      return p.id === id
+      return p.id === id // Find person who matches ID
     });
-
-    // Copy person instead of getting reference
-    // const person = Object.assign({}, this.state.persons[personIndex])
-    const person = {...this.state.persons[personIndex]}
-
-    // Set person name to value in textbox
-    person.name = event.target.value;
-
-    // Copy persons object
-    const persons = [...this.state.persons];
-
-    // Set person at index to copied person
-    persons[personIndex] = person;
-
-    // Set state to new copy of persons
-    this.setState({persons: persons})
+    // const person = Object.assign({}, this.state.persons[personIndex]) // Copy person instead of getting reference
+    const person = {...this.state.persons[personIndex]} // Copy person instead of getting reference
+    person.name = event.target.value; // Set person name to value in textbox
+    const persons = [...this.state.persons]; // Copy persons object
+    persons[personIndex] = person; // Set person at index to copied person
+    this.setState({persons: persons}) // Set state to new copy of persons
   }
 
   togglePersonHandler = () => {
@@ -54,6 +55,7 @@ class App extends Component {
   }
 
   render() {
+    console.log('[App.js] render')
     let persons = null;
 
     if(this.state.showPersons){

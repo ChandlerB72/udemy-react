@@ -6,7 +6,7 @@ const cockpit = (props) => {
     const toggleBtnRef = useRef(null)
     const authContext = useContext(AuthContext)
 
-    console.log
+    console.log(AuthContext)
 
     useEffect(() => {
         // Where to do an HTTP Request
@@ -24,7 +24,7 @@ const cockpit = (props) => {
 
     const assignedClasses = [];
     if(props.persons.length <= 2){
-        assignedClasses.push(classes.red);
+        assignedClasses.push(classes.red); 
     }
     if (props.persons.length <= 1){
         assignedClasses.push(classes.bold)

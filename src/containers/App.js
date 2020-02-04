@@ -4,6 +4,7 @@ import Persons from '../components/persons/Persons.js'
 import Cockpit from '../cockpit/Cockpit';
 import withClass from '../hoc/withClass'
 import Aux from '../hoc/Auxiliary'
+import AuthContext from '../context/auth-context'
 
 class App extends Component {
   constructor(props){
@@ -16,7 +17,9 @@ class App extends Component {
       {id: '3', name: 'Daryl', age: '26'}
       ],
       showPersons: false,
-      showCockPit: true
+      showCockPit: true,
+      changeCounter: 0,
+      authenicated: false
     }
   }
 
@@ -49,12 +52,20 @@ class App extends Component {
     person.name = event.target.value; // Set person name to value in textbox
     const persons = [...this.state.persons]; // Copy persons object
     persons[personIndex] = person; // Set person at index to copied person
-    this.setState({persons: persons}) // Set state to new copy of persons
+    this.setState((prevState, props) => { 
+      return {
+        persons: persons, 
+        changeCounter: prevState.changeCounter+1}
+      }) // Set state to new copy of persons
   }
 
   togglePersonHandler = () => {
     const doesShow = this.state.showPersons;
     this.setState({showPersons: !doesShow})
+  }
+
+  handleLogin = () => {
+    this.setState({authenicated: true})
   }
 
   render() {
@@ -66,19 +77,25 @@ class App extends Component {
           <Persons 
             persons={this.state.persons}
             clicked={this.deletePersonHandler}
-            changed={this.nameChangedHandler}></Persons>
+            changed={this.nameChangedHandler}
+            isAuthenticated={this.state.authenicated}
+            />
     }
   
     return (
         <Aux>
           <button onClick={() => {this.setState({showCockPit: false})}}>Remove Cockpit</button>
+          <AuthContext.Provider 
+            value={{authenticated: this.state.authenicated, login: this.handleLogin}}>
           {this.state.showCockPit ? 
             <Cockpit 
               title={this.props.title}
               showPersons={this.state.showPersons}
               persons={this.state.persons}
-              clicked={this.togglePersonHandler}/>: null}
+              clicked={this.togglePersonHandler}
+              />: null}
           {persons}
+          </AuthContext.Provider>
         </Aux>
     );
   }
